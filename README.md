@@ -45,6 +45,7 @@ Default base URL: http://localhost:8080
 | GET | /api/applications | List applications |
 | GET | /api/applications/{id} | Retrieve one application |
 | PATCH | /api/applications/{id}/status | Update status |
+| DELETE | /api/applications/{id} | Delete an application |
 
 Create request:
 

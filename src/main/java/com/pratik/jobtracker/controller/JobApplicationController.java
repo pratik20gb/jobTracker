@@ -43,4 +43,10 @@ public class JobApplicationController {
     ) {
         return service.updateStatus(id,request.status());
     }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable("id") long id) {
+        service.delete(id);
+    }
 }

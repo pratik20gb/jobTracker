@@ -45,4 +45,9 @@ public class JobApplicationService {
         application.setStatus(status);
         return application;
     }
+
+    public synchronized void delete(long id) {
+        JobApplication application = getById(id);
+        applications.remove(application);
+    }
 }

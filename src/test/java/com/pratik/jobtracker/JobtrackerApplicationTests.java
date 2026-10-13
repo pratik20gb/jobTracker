@@ -12,6 +12,8 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.testcontainers.postgresql.PostgreSQLContainer;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -48,23 +50,69 @@ class JobtrackerApplicationTests {
 		assertEquals(ApplicationStatus.SAVED, loaded.getStatus());
 
 		service.updateStatus(first.getId(), ApplicationStatus.APPLIED);
-		// Without a filter, both applications should be returned.
-		assertEquals(2, service.getAll(null).size());
+		var pageable = PageRequest.of(
+				0, 10, Sort.by("id").ascending()
+		);
 
-// APPLIED filter should return only the first application.
-		var applied = service.getAll(ApplicationStatus.APPLIED);
+// Without a filter, both applications are included.
+		var all = service.getAll(null, pageable);
 
-		assertEquals(1, applied.size());
-		assertEquals(first.getId(), applied.getFirst().getId());
+		assertEquals(2L, all.getTotalElements());
+		assertEquals(2, all.getContent().size());
 
-// SAVED filter should return only the second application.
-		var saved = service.getAll(ApplicationStatus.SAVED);
+// Filtering still works.
+		var applied = service.getAll(ApplicationStatus.APPLIED, pageable);
 
-		assertEquals(1, saved.size());
-		assertEquals(second.getId(), saved.getFirst().getId());
+		assertEquals(1L, applied.getTotalElements());
+		assertEquals(
+				first.getId(),
+				applied.getContent().getFirst().getId()
+		);
 
-// A status with no matching applications should return an empty list.
-		assertTrue(service.getAll(ApplicationStatus.OFFER).isEmpty());
+		var saved = service.getAll(ApplicationStatus.SAVED, pageable);
+
+		assertEquals(1L, saved.getTotalElements());
+		assertEquals(
+				second.getId(),
+				saved.getContent().getFirst().getId()
+		);
+
+		assertTrue(
+				service.getAll(ApplicationStatus.OFFER, pageable).isEmpty()
+		);
+
+// Page size 1 splits the two records into two pages.
+		var firstPage = service.getAll(
+				null,
+				PageRequest.of(0, 1, Sort.by("id").ascending())
+		);
+
+		var secondPage = service.getAll(
+				null,
+				PageRequest.of(1, 1, Sort.by("id").ascending())
+		);
+
+		assertEquals(2L, firstPage.getTotalElements());
+		assertEquals(2, firstPage.getTotalPages());
+		assertEquals(1, firstPage.getContent().size());
+		assertEquals(1, secondPage.getContent().size());
+
+		assertEquals(
+				first.getId(),
+				firstPage.getContent().getFirst().getId()
+		);
+		assertEquals(
+				second.getId(),
+				secondPage.getContent().getFirst().getId()
+		);
+
+// A page beyond the results has empty content.
+		assertTrue(
+				service.getAll(
+						null,
+						PageRequest.of(2, 1, Sort.by("id").ascending())
+				).isEmpty()
+		);
 
 		assertEquals(
 				ApplicationStatus.APPLIED,

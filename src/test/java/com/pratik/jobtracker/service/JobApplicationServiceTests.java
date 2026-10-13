@@ -1,48 +1,52 @@
 package com.pratik.jobtracker.service;
 
-import com.pratik.jobtracker.dto.CreateApplicationRequest;
 import com.pratik.jobtracker.exception.ApplicationNotFoundException;
 import com.pratik.jobtracker.model.JobApplication;
+import com.pratik.jobtracker.repository.JobApplicationRepository;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
 class JobApplicationServiceTests {
 
     @Test
-    void deleteRemovesOnlyTheSelectedApplication() {
-        JobApplicationService service = new JobApplicationService();
+    void deleteRemovesTheRequestedApplication() {
+        JobApplicationRepository repository =
+                mock(JobApplicationRepository.class);
 
-        JobApplication first = service.create(
-                new CreateApplicationRequest("Company A", "Backend Developer"));
+        JobApplicationService service =
+                new JobApplicationService(repository);
 
-        JobApplication second = service.create(
-                new CreateApplicationRequest("Company B", "Java Developer"));
+        JobApplication application = new JobApplication();
+        application.setId(1L);
 
-        service.delete(first.getId());
+        when(repository.findById(1L))
+                .thenReturn(Optional.of(application));
 
-        assertThrows(
-                ApplicationNotFoundException.class,
-                () -> service.getById(first.getId())
-        );
+        service.delete(1L);
 
-        assertEquals(1, service.getAll().size());
-        assertEquals(second.getId(), service.getAll().get(0).getId());
+        verify(repository).delete(application);
     }
 
     @Test
-    void deleteMissingApplicationThrowsAndPreservesExistingData() {
-        JobApplicationService service = new JobApplicationService();
+    void deleteMissingApplicationDoesNotCallDelete() {
+        JobApplicationRepository repository =
+                mock(JobApplicationRepository.class);
 
-        JobApplication existing = service.create(
-                new CreateApplicationRequest("Company A", "Backend Developer"));
+        JobApplicationService service =
+                new JobApplicationService(repository);
+
+        when(repository.findById(999L))
+                .thenReturn(Optional.empty());
 
         assertThrows(
                 ApplicationNotFoundException.class,
-                () -> service.delete(existing.getId() + 1)
+                () -> service.delete(999L)
         );
 
-        assertEquals(1, service.getAll().size());
-        assertEquals(existing.getId(), service.getAll().get(0).getId());
+        verify(repository, never()).delete(any(JobApplication.class));
     }
 }

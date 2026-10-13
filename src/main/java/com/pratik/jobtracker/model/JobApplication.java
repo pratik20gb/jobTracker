@@ -1,9 +1,22 @@
 package com.pratik.jobtracker.model;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name="job_applications")
 public class JobApplication {
+
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
+
+    @Column(unique=false,length=100)
     private String company;
+
+    @Column(nullable = false,length=100)
     private String role;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable=false,length=20)
     private ApplicationStatus status;
 
     public JobApplication() {

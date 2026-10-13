@@ -1,0 +1,161 @@
+.dashboard {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 72px 24px;
+}
+
+.page-header {
+  margin-bottom: 48px;
+}
+
+.eyebrow {
+  color: #596b52;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  margin-bottom: 18px;
+}
+
+.page-header h1 {
+  font-size: clamp(32px, 6vw, 48px);
+  letter-spacing: -2px;
+  line-height: 1.1;
+}
+
+.subtitle {
+  margin-top: 16px;
+  color: #626b63;
+  line-height: 1.6;
+}
+
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.section-heading h2 {
+  font-size: 18px;
+}
+
+.section-heading span {
+  color: #626b63;
+  font-size: 13px;
+}
+
+.application-list {
+  display: grid;
+  gap: 12px;
+}
+
+.application-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 22px;
+  background: #ffffff;
+  border: 1px solid #e2e6df;
+  border-radius: 16px;
+}
+
+.company-icon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: #eef1e9;
+  color: #526347;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.application-details {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.application-details h2 {
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+.application-details p {
+  color: #626b63;
+  font-size: 14px;
+}
+
+.status {
+  padding: 7px 10px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.status-applied {
+  background: #eaf1fc;
+  color: #315c96;
+}
+
+.status-interview {
+  background: #fff3dd;
+  color: #805b18;
+}
+
+.status-saved {
+  background: #eef0ed;
+  color: #586153;
+}
+
+@media (max-width: 540px) {
+  .dashboard {
+    padding: 40px 16px;
+  }
+
+  .section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .application-card {
+    flex-wrap: wrap;
+    padding: 18px;
+  }
+
+  .status {
+    margin-left: 62px;
+  }
+}
+.status-offer {
+  background: #e5f4e9;
+  color: #27633b;
+}
+
+.status-rejected {
+  background: #fcebea;
+  color: #983c36;
+}
+
+.feedback {
+  padding: 22px;
+  border: 1px solid #e2e6df;
+  border-radius: 16px;
+  background: #ffffff;
+  color: #626b63;
+  line-height: 1.6;
+}
+
+.feedback-error {
+  background: #fff4f2;
+  border-color: #f1d0ca;
+  color: #983c36;
+}
+
+.feedback p + p {
+  margin-top: 8px;
+}

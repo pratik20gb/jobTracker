@@ -5,10 +5,11 @@ import com.pratik.jobtracker.exception.ApplicationNotFoundException;
 import com.pratik.jobtracker.model.ApplicationStatus;
 import com.pratik.jobtracker.model.JobApplication;
 import com.pratik.jobtracker.repository.JobApplicationRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -31,8 +32,15 @@ public class JobApplicationService {
         return repository.save(application);
     }
 
-    public List<JobApplication> getAll() {
-        return repository.findAll();
+    public Page<JobApplication> getAll(
+            ApplicationStatus status,
+            Pageable pageable
+    ) {
+        if (status == null) {
+            return repository.findAll(pageable);
+        }
+
+        return repository.findByStatus(status, pageable);
     }
 
     public JobApplication getById(long id) {

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.css";
+import AddApplicationForm from "./components/AddApplicationForm";
 
 function ApplicationCard({ application }) {
   return (
@@ -27,11 +28,20 @@ export default function App() {
   const [totalElements, setTotalElements] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [notice, setNotice] = useState("");
+
+  function handleCreated() {
+    setNotice("Application saved successfully.");
+    setRefreshKey((previous) => previous + 1);
+  }
 
   useEffect(() => {
     const controller = new AbortController();
 
     async function loadApplications() {
+        setLoading(true);
+        setError("");
       try {
         const response = await fetch(
           "/api/applications?page=0&size=10",
@@ -64,7 +74,7 @@ export default function App() {
     loadApplications();
 
     return () => controller.abort();
-  }, []);
+ }, [refreshKey]);
 
   return (
     <main className="dashboard">
@@ -75,6 +85,13 @@ export default function App() {
           Keep your applications organized, one opportunity at a time.
         </p>
       </header>
+      <AddApplicationForm onCreated={handleCreated} />
+
+      {notice && (
+        <p className="success-message" role="status">
+          {notice}
+        </p>
+      )}
 
       <section aria-labelledby="applications-heading">
         <div className="section-heading">
@@ -102,8 +119,7 @@ export default function App() {
 
         {!loading && !error && applications.length === 0 && (
           <p className="feedback">
-            No applications yet. Add one using Postman for now,
-            then reload this page.
+            No applications yet. Add your first application using the form above.
           </p>
         )}
 

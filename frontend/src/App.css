@@ -159,3 +159,96 @@
 .feedback p + p {
   margin-top: 8px;
 }
+.add-application {
+  margin-bottom: 24px;
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid #e2e6df;
+  border-radius: 16px;
+}
+
+.add-application h2 {
+  margin-bottom: 20px;
+  font-size: 18px;
+}
+
+.form-fields {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+}
+
+.form-field {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.form-field label {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.form-field input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #cdd4c8;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #202622;
+  font: inherit;
+  font-size: 14px;
+}
+
+.form-field input:focus-visible {
+  outline: 2px solid #596b52;
+  outline-offset: 2px;
+}
+
+.form-fields button {
+  min-height: 44px;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 8px;
+  background: #42583b;
+  color: #ffffff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.form-fields button:hover:not(:disabled) {
+  background: #34482e;
+}
+
+.form-fields button:focus-visible {
+  outline: 2px solid #42583b;
+  outline-offset: 3px;
+}
+
+.form-fields button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.form-error {
+  margin-top: 14px;
+  color: #983c36;
+  font-size: 14px;
+}
+
+.success-message {
+  margin-bottom: 24px;
+  color: #27633b;
+  font-size: 14px;
+}
+
+@media (max-width: 640px) {
+  .form-fields {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

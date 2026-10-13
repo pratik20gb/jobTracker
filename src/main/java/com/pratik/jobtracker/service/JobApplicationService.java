@@ -1,53 +1,58 @@
 package com.pratik.jobtracker.service;
 
-
 import com.pratik.jobtracker.dto.CreateApplicationRequest;
-import com.pratik.jobtracker.dto.UpdateApplicationStatusRequest;
 import com.pratik.jobtracker.exception.ApplicationNotFoundException;
 import com.pratik.jobtracker.model.ApplicationStatus;
 import com.pratik.jobtracker.model.JobApplication;
+import com.pratik.jobtracker.repository.JobApplicationRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 public class JobApplicationService {
-    private final List<JobApplication> applications = new ArrayList<>();
-    private long nextId = 1;
 
-    public synchronized JobApplication create(CreateApplicationRequest request) {
+    private final JobApplicationRepository repository;
+
+    public JobApplicationService(JobApplicationRepository repository) {
+        this.repository = repository;
+    }
+
+    @Transactional
+    public JobApplication create(CreateApplicationRequest request) {
         JobApplication application = new JobApplication();
-        application.setId(nextId++);
+
         application.setCompany(request.company().strip());
         application.setRole(request.role().strip());
         application.setStatus(ApplicationStatus.SAVED);
-        applications.add(application);
-        return application;
+
+        return repository.save(application);
     }
 
-    public synchronized JobApplication getById(long id){
-        for(JobApplication application : applications){
-            if(application.getId() == id){
-                return application;
-            }
-        }
-        throw new ApplicationNotFoundException(id);
+    public List<JobApplication> getAll() {
+        return repository.findAll();
     }
 
-    public synchronized List<JobApplication> getAll() {
-        return new  ArrayList<>(applications);
+    public JobApplication getById(long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ApplicationNotFoundException(id));
     }
 
-
-    public synchronized JobApplication updateStatus(long id ,ApplicationStatus status) {
+    @Transactional
+    public JobApplication updateStatus(long id, ApplicationStatus status) {
         JobApplication application = getById(id);
+
         application.setStatus(status);
+
         return application;
     }
 
-    public synchronized void delete(long id) {
+    @Transactional
+    public void delete(long id) {
         JobApplication application = getById(id);
-        applications.remove(application);
+
+        repository.delete(application);
     }
 }

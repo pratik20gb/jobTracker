@@ -150,6 +150,19 @@ PATCH /api/applications/1/status
 
 Use one of the supported uppercase status values.
 
+### Filter applications by status
+
+```http
+GET /api/applications?status=APPLIED
+```
+
+The optional `status` parameter filters applications by status.
+Omit it to retrieve all applications. A valid status with no matches
+returns an empty list.
+
+Supported values: `SAVED`, `APPLIED`, `INTERVIEW`, `OFFER`, `REJECTED`.
+
+
 ### Error responses
 
 Validation failure — `400 Bad Request`:
@@ -209,7 +222,7 @@ HTTP responses and restart persistence have been verified manually with Postman;
 
 ## Planned
 
-- Search, status filtering, and pagination
+- Search and pagination
 - User authentication and application ownership
 - React frontend
 - CI and deployment

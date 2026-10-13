@@ -48,6 +48,23 @@ class JobtrackerApplicationTests {
 		assertEquals(ApplicationStatus.SAVED, loaded.getStatus());
 
 		service.updateStatus(first.getId(), ApplicationStatus.APPLIED);
+		// Without a filter, both applications should be returned.
+		assertEquals(2, service.getAll(null).size());
+
+// APPLIED filter should return only the first application.
+		var applied = service.getAll(ApplicationStatus.APPLIED);
+
+		assertEquals(1, applied.size());
+		assertEquals(first.getId(), applied.getFirst().getId());
+
+// SAVED filter should return only the second application.
+		var saved = service.getAll(ApplicationStatus.SAVED);
+
+		assertEquals(1, saved.size());
+		assertEquals(second.getId(), saved.getFirst().getId());
+
+// A status with no matching applications should return an empty list.
+		assertTrue(service.getAll(ApplicationStatus.OFFER).isEmpty());
 
 		assertEquals(
 				ApplicationStatus.APPLIED,

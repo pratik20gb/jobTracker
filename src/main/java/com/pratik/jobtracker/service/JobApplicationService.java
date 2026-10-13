@@ -31,8 +31,11 @@ public class JobApplicationService {
         return repository.save(application);
     }
 
-    public List<JobApplication> getAll() {
-        return repository.findAll();
+    public List<JobApplication> getAll(ApplicationStatus status) {
+        if(status==null){
+            return repository.findAll();
+        }
+        return repository.findByStatus(status);
     }
 
     public JobApplication getById(long id) {

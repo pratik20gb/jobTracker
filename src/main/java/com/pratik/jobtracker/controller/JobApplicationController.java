@@ -2,6 +2,7 @@ package com.pratik.jobtracker.controller;
 
 import com.pratik.jobtracker.dto.CreateApplicationRequest;
 import com.pratik.jobtracker.dto.UpdateApplicationStatusRequest;
+import com.pratik.jobtracker.model.ApplicationStatus;
 import com.pratik.jobtracker.model.JobApplication;
 import com.pratik.jobtracker.service.JobApplicationService;
 import jakarta.validation.Valid;
@@ -31,9 +32,10 @@ public class JobApplicationController {
     public JobApplication getById(@PathVariable("id") long id) {
         return service.getById(id);
     }
+
     @GetMapping
-    public List<JobApplication> getAll() {
-        return service.getAll();
+    public List<JobApplication> getAll(@RequestParam(name="status",required=false) ApplicationStatus status) {
+        return service.getAll(status);
     }
 
     @PatchMapping("/{id}/status")

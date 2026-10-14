@@ -2,26 +2,7 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import AddApplicationForm from "./components/AddApplicationForm";
 
-function ApplicationCard({ application }) {
-  return (
-    <article className="application-card">
-      <div className="company-icon">
-        {application.company.charAt(0)}
-      </div>
-
-      <div className="application-details">
-        <h2>{application.company}</h2>
-        <p>{application.role}</p>
-      </div>
-
-      <span
-        className={`status status-${application.status.toLowerCase()}`}
-      >
-        {application.status}
-      </span>
-    </article>
-  );
-}
+import ApplicationCard from "./components/ApplicationCard";
 
 export default function App() {
   const [applications, setApplications] = useState([]);
@@ -35,7 +16,10 @@ export default function App() {
     setNotice("Application saved successfully.");
     setRefreshKey((previous) => previous + 1);
   }
-
+    function handleChanged(message) {
+      setNotice(message);
+      setRefreshKey((previous) => previous + 1);
+    }
   useEffect(() => {
     const controller = new AbortController();
 
@@ -125,12 +109,13 @@ export default function App() {
 
         {!loading && !error && applications.length > 0 && (
           <div className="application-list">
-            {applications.map((application) => (
-              <ApplicationCard
-                key={application.id}
-                application={application}
-              />
-            ))}
+           {applications.map((application) => (
+             <ApplicationCard
+               key={application.id}
+               application={application}
+               onChanged={handleChanged}
+             />
+           ))}
           </div>
         )}
       </section>
